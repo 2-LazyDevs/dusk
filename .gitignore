@@ -1,0 +1,62 @@
+# ===========================
+# Build output folders
+# ===========================
+build/
+bin/
+obj/
+*.o
+*.out
+*.exe
+*.app
+*.so
+*.a
+*.lib
+DuskEngine
+
+# ===========================
+# SCons temporary
+# ===========================
+*.pyc
+.sconsign.dblite
+
+# ===========================
+# OS-specific
+# ===========================
+# Linux
+*~
+*.swp
+.fuse_hidden*
+.Trash-*
+.directory
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# ===========================
+# Editor / IDE files
+# ===========================
+# VSCode
+.vscode/
+.vscode/*
+
+# JetBrains
+.idea/
+*.iml
+
+# Vim/Neovim swap
+*.swp
+*.swo
+
+# ===========================
+# Temporary / cache files
+# ===========================
+*.log
+*.tmp
+
