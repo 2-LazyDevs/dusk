@@ -7,11 +7,16 @@
 /*   Copyright AR-DEV-1, 2LazyDevs & the DUSK contributors 2025-present   */
 /**************************************************************************/
 
-#include "main.h"
-#include "../thirdparty/GLFW/include/glfw3.h"
 #include <iostream>
 
-namespace DUSK {
+#include "main.h"
+#include <GLFW/glfw3.h>
+#include "io.h"
+
+namespace DK::Main {
+
+using namespace DK::IO;
+
 App::App(const std::string& title, int width, int height)
     : m_Title(title), m_Width(width), m_Height(height), m_IsRunning(false) {}
 
@@ -29,7 +34,7 @@ bool App::Init() {
         return false;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // start with 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -42,6 +47,8 @@ bool App::Init() {
 
     glfwMakeContextCurrent(static_cast<GLFWwindow*>(m_Window));
     glfwSwapInterval(1);
+
+    IO::IO::Init(m_Window);
 
     m_IsRunning = true;
     return true;
@@ -56,6 +63,12 @@ void App::Run() {
         // ToDo: Replace the update engine & render frame placeholders with actual functions
         // Update();
         // Render();
+
+        IO::IO::Update();
+
+        if(IO::IO::IsKeyPressed(Key::Escape)) {
+            m_IsRunning = false;
+        }
 
         glfwSwapBuffers(static_cast<GLFWwindow*>(m_Window));
     };
@@ -77,7 +90,7 @@ void App::Shutdown() {
 } // namespace DUSK
 
 int main() {
-    DUSK::App app("Dusk engine", 1280, 720);
+    DK::Main::App app("Dusk engine", 1280, 720);
 
     if (!app.Init()) {
         std::cerr << "Failed to initialize Dusk!\n";
