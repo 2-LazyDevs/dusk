@@ -19,9 +19,10 @@ env.Program(
     source=[
         'main/main.cpp',
         'core/io/io.cpp',
+        'editor/renderer/renderer.cpp',
         'thirdparty/glad/src/gl.c'
     ],
-    CPPPATH=['core/io', 'main', os.path.join(GLAD_DIR, 'include')],
+    CPPPATH=['core/io', 'main','editor/renderer', os.path.join(GLAD_DIR, 'include')],
     LIBS=['glfw', 'GL', 'pthread', 'dl', 'm', 'wayland-client', 'wayland-cursor', 'xkbcommon'],
     LIBPATH=['thirdparty/GLFW/lib']
 )

@@ -12,11 +12,13 @@
 #include "main.h"
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#include "renderer.h"
 #include "io.h"
 
 namespace DK::Main {
 
 using namespace DK::IO;
+using namespace DK::Renderer;
 
 App::App(const std::string& title, int width, int height)
     : m_Title(title), m_Width(width), m_Height(height), m_IsRunning(false) {}
@@ -64,6 +66,10 @@ bool App::Init() {
 
 
 bool App::Run() {
+    // Create & init the renderer
+    Renderer::Renderer renderer;
+    renderer.Init(800, 600);
+
     bool userExit = false;
     while ((m_IsRunning) && !glfwWindowShouldClose(static_cast<GLFWwindow*>(m_Window)))
     {
@@ -71,7 +77,12 @@ bool App::Run() {
 
         // ToDo: Replace the update engine & render frame placeholders with actual functions
         // Update();
-        // Render();
+
+        renderer.BeginFrame();
+
+        renderer.DrawTriangle();
+
+        renderer.EndFrame(static_cast<GLFWwindow*>(m_Window));
 
         IO::IO::Update();
 

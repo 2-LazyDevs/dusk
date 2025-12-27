@@ -37,5 +37,5 @@ private:
     void* m_Window;
 
   };
-} // namespace DUSK
+} // namespace DK::Main
 #endif // DUSK_MAIN_H
