@@ -23,7 +23,7 @@ public:
 
     bool Init();
 
-    void Run();
+    bool Run();
 
     void Shutdown();
 

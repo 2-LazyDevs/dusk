@@ -15,9 +15,11 @@
 #include <cstdint>
 #include <utility>
 
+#include <GLFW/glfw3.h>
+
 namespace DK::IO {
-static constexpr int MAX_KEYS = 105;
-static constexpr int MAX_MOUSE_BUTTONS = 8;
+static constexpr int MAX_KEYS = GLFW_KEY_LAST + 1;
+static constexpr int MAX_MOUSE_BUTTONS = GLFW_MOUSE_BUTTON_LAST + 1;
 
 using WindowHandle = void*;
 

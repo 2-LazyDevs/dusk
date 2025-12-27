@@ -9,8 +9,8 @@
 
 #include <algorithm>
 
-#include "io.h"
 #include <GLFW/glfw3.h>
+#include "io.h"
 
 
 namespace DK::IO {
@@ -43,30 +43,38 @@ void IO::Init(WindowHandle Window) {
 }
 
 void IO::Update() {
-    std::copy(key_state_previous, key_state_previous + MAX_KEYS, key_state_current);
-    std::copy(mouse_state_previous, mouse_state_previous + MAX_MOUSE_BUTTONS, mouse_state_current);
+    // Copy previous state
+    std::copy(key_state_current, key_state_current + MAX_KEYS, key_state_previous);
+    std::copy(mouse_state_current, mouse_state_current + MAX_MOUSE_BUTTONS, mouse_state_previous);
 
     GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(s_Window);
 
-    for (int k = 0; k < MAX_KEYS; k++) {
-        key_state_current[k] = (glfwGetKey(glfwWindow, k) == GLFW_PRESS);
-    }
+    // Poll keys
+    glfwSetKeyCallback(glfwWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+     if (key >= 0 && key <= GLFW_KEY_LAST) {
+        IO::key_state_current[key] = (action == GLFW_PRESS || action == GLFW_REPEAT);
+        IO::key_state_previous[key] = (action == GLFW_PRESS);
+       }
+    });
 
+    // Poll mouse buttons
     for (int b = 0; b < MAX_MOUSE_BUTTONS; b++) {
         mouse_state_current[b] = (glfwGetMouseButton(glfwWindow, b) == GLFW_PRESS);
     }
 
+    // Poll mouse position
     double x, y;
     glfwGetCursorPos(glfwWindow, &x, &y);
     mouse_x = static_cast<float>(x);
     mouse_y = static_cast<float>(y);
 }
 
+
 bool IO::IsKeyDown(Key key) {
     int k = static_cast<int>(key);
 
     // Safety check to ensure k won't exceed MAX_KEYS & will not be less then 0
-    if (k < 0 || k >= MAX_KEYS) {
+    if (k < 0 || k >= GLFW_KEY_LAST) {
         return false;
     }
 
@@ -77,7 +85,7 @@ bool IO::IsKeyPressed(Key key) {
     int k = static_cast<int>(key);
 
     // Safety check to ensure k won't exceed MAX_KEYS & will not be less then 0
-    if (k < 0 || k >= MAX_KEYS) {
+    if (k < 0 || k >= GLFW_KEY_LAST) {
         return false;
     }
 

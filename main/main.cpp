@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "main.h"
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include "io.h"
 
@@ -26,11 +27,11 @@ bool App::Init() {
     std::cout << "Initializing Dusk \n";
 
     glfwSetErrorCallback([](int error, const char* description){
-        std::cerr << "GLFW Error [" << error << "]: " << description << "\n";
+        std::cerr << "GLFW Error [" << error << "]: " << description << "\n Report this error here: https://github.com/2-LazyDevs/dusk/issues \n";
     });
 
     if (!glfwInit()) {
-        std::cerr << "GLFW Initialization failed. \n";
+        std::cerr << "GLFW Initialization failed. Report this error here: https://github.com/2-LazyDevs/dusk/issues \n";
         return false;
     }
 
@@ -40,13 +41,20 @@ bool App::Init() {
 
     m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), nullptr, nullptr);
     if (!m_Window) {
-        std::cerr << "Failed to create the window. \n";
+        std::cerr << "Failed to create the window. Report this error here: https://github.com/2-LazyDevs/dusk/issues \n";
         glfwTerminate();
         return false;
     }
 
     glfwMakeContextCurrent(static_cast<GLFWwindow*>(m_Window));
     glfwSwapInterval(1);
+
+    if (!gladLoadGL(glfwGetProcAddress)) {
+        std::cerr << "The OpenGL loader, GLAD, failed. Report this error here: https://github.com/2-LazyDevs/dusk/issues \n";
+        return -1;
+    }
+    
+    std::cout << "The OpenGL version is: " << glGetString(GL_VERSION) << "\n";
 
     IO::IO::Init(m_Window);
 
@@ -55,7 +63,8 @@ bool App::Init() {
 }
 
 
-void App::Run() {
+bool App::Run() {
+    bool userExit = false;
     while ((m_IsRunning) && !glfwWindowShouldClose(static_cast<GLFWwindow*>(m_Window)))
     {
         glfwPollEvents();
@@ -68,11 +77,13 @@ void App::Run() {
 
         if(IO::IO::IsKeyPressed(Key::Escape)) {
             m_IsRunning = false;
+            userExit = true;
         }
 
         glfwSwapBuffers(static_cast<GLFWwindow*>(m_Window));
     };
     
+    return !userExit;
 }
 
 void App::Shutdown() {
@@ -93,12 +104,12 @@ int main() {
     DK::Main::App app("Dusk engine", 1280, 720);
 
     if (!app.Init()) {
-        std::cerr << "Failed to initialize Dusk!\n";
+        std::cerr << "Failed to initialize Dusk! Report this error here: https://github.com/2-LazyDevs/dusk/issues \n";
         return -1;
     }
 
-    app.Run();
+    bool success = app.Run();
     app.Shutdown();
 
-    return 0;
+    return success ? 0 : -1;
 }
